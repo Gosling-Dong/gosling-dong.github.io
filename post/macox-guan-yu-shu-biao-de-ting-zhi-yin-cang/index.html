@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MacOX  关于鼠标的停滞隐藏 | 大方志行</title>
+<meta name="description" content="见天地，只轻重">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://gosling-dong.github.io/favicon.ico?v=1558944894607">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://gosling-dong.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://gosling-dong.github.io">
+        <img src="https://gosling-dong.github.io/images/avatar.png?v=1558944894607" class="site-logo">
+        <h1 class="site-title">大方志行</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      见天地，只轻重
+    </div>
+    <div class="site-footer">
+       Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://gosling-dong.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MacOX  关于鼠标的停滞隐藏</h2>
+            <div class="post-date">2017-09-20</div>
+            
+              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <pre><code>首先，mac上的鼠标事件和web一样，有悬停方法等。
+</code></pre>
+<h1 id="开启鼠标悬停事件">开启鼠标悬停事件</h1>
+<h3 id="先声明">先声明：</h3>
+<pre><code>@property(nonatomic,strong) NSTrackingArea *trackingArea;
+</code></pre>
+<h2 id="在需要的时候调用这个方法">在需要的时候调用这个方法</h2>
+<pre><code>-(void)openMouseOverflowEvent{
+
+				NSTrackingAreaOptions  options = NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways | NSTrackingMouseMoved;
+				self.TrackingArea = [[NSTrackingArea alloc] initWithRect:self.view.bounds options:options owner:self.view userInfo:nil];
+				[self.view addTrackingArea:self.trackingArea];
+				NSLog(@&quot;开启鼠标悬停&quot;);
+}
+</code></pre>
+<p>这样就开启了鼠标事件</p>
+<p><strong>NSTrackingMouseEnteredAndExited  代表鼠标进入窗口和离开窗口</strong></p>
+<p><strong>NSTrackingMouseMoved  代表鼠标在窗口上移动</strong></p>
+<h2 id="鼠标进入窗口事件">鼠标进入窗口事件</h2>
+<pre><code>- (void) mouseEntered:(NSEvent *) theEvent{
+
+            if(self.trackingArea != nil) {
+								NSLog(@&quot;鼠标进入控制器&quot;);
+						}else{
+							[self openMouseOverflowEvent];
+           }
+}
+</code></pre>
+<h2 id="鼠标离开窗口事件">鼠标离开窗口事件</h2>
+<pre><code>-(void)mouseExited:(NSEvent*)theEvent{
+
+      if(_trackingArea != nil) {
+						 NSLog(@&quot;鼠标离开控制器&quot;);
+     }else{
+						[self closeMouseOverflowEvent];
+}
+</code></pre>
+<h2 id="鼠标移动事件">鼠标移动事件</h2>
+<pre><code>- (void)mouseMoved:(NSEvent*)event{
+     NSLog(@&quot;鼠标移动&quot;);
+}
+</code></pre>
+<h2 id="关闭鼠标悬停事件">关闭鼠标悬停事件</h2>
+<pre><code>- (void)closeMouseOverflowEvent{
+				[self.view removeTrackingArea:_trackingArea];
+				_trackingArea=nil;
+				NSLog(@&quot;关闭鼠标悬停&quot;);
+}
+</code></pre>
+<p><em><strong>接下来说一说 鼠标隐藏方法</strong></em></p>
+<h2 id="鼠标隐藏">鼠标隐藏</h2>
+<pre><code>//隐藏鼠标
+[NSCursor setHiddenUntilMouseMoves:YES];
+</code></pre>
+<h3 id="使用">使用</h3>
+<pre><code>dispatch_queue_t  queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  (int64_t)(2.5*NSEC_PER_SEC)),  queue, ^{
+[NSCursor setHiddenUntilMouseMoves:YES];
+});
+</code></pre>
+
+            </div>
+            
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

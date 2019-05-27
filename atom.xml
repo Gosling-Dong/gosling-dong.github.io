@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://gosling-dong.github.io</id>
     <title>大方志行</title>
-    <updated>2019-05-27T06:30:56.195Z</updated>
+    <updated>2019-05-27T08:15:04.191Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://gosling-dong.github.io"/>
     <link rel="self" href="https://gosling-dong.github.io/atom.xml"/>
@@ -40,6 +40,115 @@
 <p>未来，它一定会成为你离不开的伙伴</p>
 <p>尽情发挥你的才华吧！</p>
 <p>😘 Enjoy~</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MacOS  NSButton 字体颜色]]></title>
+        <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se</id>
+        <link href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
+        </link>
+        <updated>2017-09-20T08:03:07.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
+<pre><code>NSButton *btn = [[NSButton alloc]init];
+</code></pre>
+<p><strong>设置button风格为Square</strong></p>
+<pre><code>[btn setBezelStyle:NSBezelStyleRegularSquare];
+</code></pre>
+<p>**设置字体颜色 **</p>
+<pre><code>[self setButtonColor: btn];
+</code></pre>
+<pre><code>- (void)setButtonColor:(NSButton*)btn{
+
+NSMutableParagraphStyle*btnStyle = [[NSMutableParagraphStylealloc]init];
+
+btnStyle.alignment=NSTextAlignmentCenter;
+
+NSDictionary *dicAtt =@{NSForegroundColorAttributeName:[NSColor redColor],NSParagraphStyleAttributeName: btnStyle};
+
+//给NSButton先赋值一个字符串，为的是后面替换，如果NSButton的title是空字符串的话，也会内存泄漏
+
+btn.title=@&quot;清空全部&quot;;//这里的字符串长度要和后面的设置的长度一样 这里可以随便填
+
+NSMutableAttributedString*attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:btn.attributedTitle];
+
+//替换文字
+
+[attTitle replaceCharactersInRange:NSMakeRange(0,4)withString:@&quot;清空全部&quot;];
+
+[attTitle addAttributes:dicAttrange:NSMakeRange(0,4)];
+
+btn.attributedTitle= attTitle;
+
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MacOX  关于鼠标的停滞隐藏]]></title>
+        <id>https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang</id>
+        <link href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
+        </link>
+        <updated>2017-09-20T06:46:40.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>首先，mac上的鼠标事件和web一样，有悬停方法等。
+</code></pre>
+<h1 id="开启鼠标悬停事件">开启鼠标悬停事件</h1>
+<h3 id="先声明">先声明：</h3>
+<pre><code>@property(nonatomic,strong) NSTrackingArea *trackingArea;
+</code></pre>
+<h2 id="在需要的时候调用这个方法">在需要的时候调用这个方法</h2>
+<pre><code>-(void)openMouseOverflowEvent{
+
+				NSTrackingAreaOptions  options = NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways | NSTrackingMouseMoved;
+				self.TrackingArea = [[NSTrackingArea alloc] initWithRect:self.view.bounds options:options owner:self.view userInfo:nil];
+				[self.view addTrackingArea:self.trackingArea];
+				NSLog(@&quot;开启鼠标悬停&quot;);
+}
+</code></pre>
+<p>这样就开启了鼠标事件</p>
+<p><strong>NSTrackingMouseEnteredAndExited  代表鼠标进入窗口和离开窗口</strong></p>
+<p><strong>NSTrackingMouseMoved  代表鼠标在窗口上移动</strong></p>
+<h2 id="鼠标进入窗口事件">鼠标进入窗口事件</h2>
+<pre><code>- (void) mouseEntered:(NSEvent *) theEvent{
+
+            if(self.trackingArea != nil) {
+								NSLog(@&quot;鼠标进入控制器&quot;);
+						}else{
+							[self openMouseOverflowEvent];
+           }
+}
+</code></pre>
+<h2 id="鼠标离开窗口事件">鼠标离开窗口事件</h2>
+<pre><code>-(void)mouseExited:(NSEvent*)theEvent{
+
+      if(_trackingArea != nil) {
+						 NSLog(@&quot;鼠标离开控制器&quot;);
+     }else{
+						[self closeMouseOverflowEvent];
+}
+</code></pre>
+<h2 id="鼠标移动事件">鼠标移动事件</h2>
+<pre><code>- (void)mouseMoved:(NSEvent*)event{
+     NSLog(@&quot;鼠标移动&quot;);
+}
+</code></pre>
+<h2 id="关闭鼠标悬停事件">关闭鼠标悬停事件</h2>
+<pre><code>- (void)closeMouseOverflowEvent{
+				[self.view removeTrackingArea:_trackingArea];
+				_trackingArea=nil;
+				NSLog(@&quot;关闭鼠标悬停&quot;);
+}
+</code></pre>
+<p><em><strong>接下来说一说 鼠标隐藏方法</strong></em></p>
+<h2 id="鼠标隐藏">鼠标隐藏</h2>
+<pre><code>//隐藏鼠标
+[NSCursor setHiddenUntilMouseMoves:YES];
+</code></pre>
+<h3 id="使用">使用</h3>
+<pre><code>dispatch_queue_t  queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  (int64_t)(2.5*NSEC_PER_SEC)),  queue, ^{
+[NSCursor setHiddenUntilMouseMoves:YES];
+});
+</code></pre>
 ]]></content>
     </entry>
 </feed>

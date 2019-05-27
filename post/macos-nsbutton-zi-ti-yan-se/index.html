@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MacOS  NSButton 字体颜色 | 大方志行</title>
+<meta name="description" content="见天地，只轻重">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://gosling-dong.github.io/favicon.ico?v=1558944894607">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://gosling-dong.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://gosling-dong.github.io">
+        <img src="https://gosling-dong.github.io/images/avatar.png?v=1558944894607" class="site-logo">
+        <h1 class="site-title">大方志行</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      见天地，只轻重
+    </div>
+    <div class="site-footer">
+       Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://gosling-dong.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MacOS  NSButton 字体颜色</h2>
+            <div class="post-date">2017-09-20</div>
+            
+              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/macos-nsbutton-zi-ti-yan-se.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p><strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
+<pre><code>NSButton *btn = [[NSButton alloc]init];
+</code></pre>
+<p><strong>设置button风格为Square</strong></p>
+<pre><code>[btn setBezelStyle:NSBezelStyleRegularSquare];
+</code></pre>
+<p>**设置字体颜色 **</p>
+<pre><code>[self setButtonColor: btn];
+</code></pre>
+<pre><code>- (void)setButtonColor:(NSButton*)btn{
+
+NSMutableParagraphStyle*btnStyle = [[NSMutableParagraphStylealloc]init];
+
+btnStyle.alignment=NSTextAlignmentCenter;
+
+NSDictionary *dicAtt =@{NSForegroundColorAttributeName:[NSColor redColor],NSParagraphStyleAttributeName: btnStyle};
+
+//给NSButton先赋值一个字符串，为的是后面替换，如果NSButton的title是空字符串的话，也会内存泄漏
+
+btn.title=@&quot;清空全部&quot;;//这里的字符串长度要和后面的设置的长度一样 这里可以随便填
+
+NSMutableAttributedString*attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:btn.attributedTitle];
+
+//替换文字
+
+[attTitle replaceCharactersInRange:NSMakeRange(0,4)withString:@&quot;清空全部&quot;];
+
+[attTitle addAttributes:dicAttrange:NSMakeRange(0,4)];
+
+btn.attributedTitle= attTitle;
+
+}
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
+                  <h3 class="post-title">
+                    MacOX  关于鼠标的停滞隐藏
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
