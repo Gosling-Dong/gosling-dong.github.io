@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>文章归档 | 大方志行</title>
+<title>MacOS 文件拖入窗口 | 大方志行</title>
 <meta name="description" content="见天地，只轻重">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -91,60 +91,100 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          
+          <div class="post-detail">
+            <h2 class="post-title">MacOS 文件拖入窗口</h2>
+            <div class="post-date">2017-09-20</div>
+            
+              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/macos-wen-jian-tuo-ru-chuang-kou.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p>看到很多Mac上的工具类应用都可以直接拖入图片 或者 拖入文件直接使用，今天就来说一下文件拖入的使用方法</p>
+<p>首先 新建一个文件继承NSView；
+声明一个BOOL值</p>
+<pre><code>@property(nonatomic,assign)BOOL isDragIn;
+</code></pre>
+<pre><code>- (void)drawRect:(NSRect)dirtyRect {
 
-          <h2 class="archives-title">文章归档</h2>
-          <div class="archives-container">
+       [superdrawRect:dirtyRect];
+
+       [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil]];
+
+       if(_isDragIn) {
+
+       NSLog(@&quot;拖拽了&quot;);
+
+    }
+}
+</code></pre>
+<pre><code>- (NSDragOperation)draggingEntered:(id)sender
+{
+_isDragIn=YES;
+
+[self setNeedsDisplay:YES];
+
+return NSDragOperationCopy;
+
+}
+</code></pre>
+<pre><code>- (void)draggingExited:(id)sender{
+
+_isDragIn=NO;
+
+[self setNeedsDisplay:YES];
+
+}
+</code></pre>
+<pre><code>- (BOOL)prepareForDragOperation:(id)sender{
+
+_isDragIn=NO;
+
+[self setNeedsDisplay:YES];
+
+returnYES;
+
+}
+</code></pre>
+<pre><code>- (BOOL)performDragOperation:(id)sender{
+
+if([senderdraggingSource] !=self)
+
+{
+
+NSArray* filePaths = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+
+NSLog(@&quot;文件地址%@&quot;,filePaths);
+
+}
+
+return YES;
+}
+</code></pre>
+
+            </div>
             
-              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2017</h2>
-              
+              <div class="tag-container">
                 
-                  <article class="post">
-                    <a href="https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian">
-                      <h2 class="post-title">
-                        MacOS  监听窗口的改变
-                      </h2>
-                    </a>
-                  </article>
+                  <a href="https://gosling-dong.github.io/tag/XRfuUIBVh" class="tag">
+                    OS X
+                  </a>
                 
-              
-                
-                  <article class="post">
-                    <a href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou">
-                      <h2 class="post-title">
-                        MacOS 文件拖入窗口
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
-                      <h2 class="post-title">
-                        MacOS  NSButton 字体颜色
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
-                      <h2 class="post-title">
-                        MacOX  关于鼠标的停滞隐藏
-                      </h2>
-                    </a>
-                  </article>
-                
-              
+              </div>
             
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
+                  <h3 class="post-title">
+                    MacOS  NSButton 字体颜色
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
           </div>
-
-          <div class="pagination-container">
-  
-  
-</div>
 
         </div>
       </div>

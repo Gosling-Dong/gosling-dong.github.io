@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://gosling-dong.github.io</id>
     <title>大方志行</title>
-    <updated>2019-05-27T08:17:02.828Z</updated>
+    <updated>2019-05-27T08:46:31.180Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://gosling-dong.github.io"/>
     <link rel="self" href="https://gosling-dong.github.io/atom.xml"/>
@@ -10,6 +10,140 @@
     <logo>https://gosling-dong.github.io/images/avatar.png</logo>
     <icon>https://gosling-dong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2019, 大方志行</rights>
+    <entry>
+        <title type="html"><![CDATA[MacOS  监听窗口的改变]]></title>
+        <id>https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian</id>
+        <link href="https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian">
+        </link>
+        <updated>2017-10-20T08:24:15.000Z</updated>
+        <content type="html"><![CDATA[<p>监听窗口拉伸，进入全屏，即将推出全屏，已经推出全屏，最小化，窗口关闭</p>
+<h2 id="观察窗口拉伸">观察窗口拉伸</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(screenResize)name:NSWindowDidResizeNotificationobject:nil];
+
+-(void)screenResize{
+
+//NSLog(@&quot;观察窗口拉伸&quot;);
+
+//NSLog(@&quot;%.2f===%.2f&quot;,self.view.bounds.size.width,self.view.bounds.size.height);
+
+}
+</code></pre>
+<h2 id="即将进入全屏">即将进入全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willEnterFull:)name:NSWindowWillEnterFullScreenNotificationobject:nil];
+
+-(void)willEnterFull:(NSNotification*)notification{
+
+NSLog(@&quot;即将全屏&quot;);
+
+}
+</code></pre>
+<h2 id="即将推出全屏">即将推出全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willExitFull:)name:NSWindowWillExitFullScreenNotificationobject:nil];
+
+-(void)willExitFull:(NSNotification*)notification {
+
+NSLog(@&quot;即将推出全屏&quot;);
+
+}
+</code></pre>
+<h2 id="已经推出全屏">已经推出全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didExitFull:)name:NSWindowDidExitFullScreenNotificationobject:nil];
+
+-(void)didExitFull:(NSNotification*)notification{
+
+NSLog(@&quot;推出全屏&quot;);
+
+}
+</code></pre>
+<h2 id="窗口最小化">窗口最小化</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didMiniaturize:)name:NSWindowDidMiniaturizeNotificationobject:nil];
+
+-(void)didMiniaturize:(NSNotification*)notification{
+
+NSLog(@&quot;窗口变小&quot;);
+
+}
+</code></pre>
+<h2 id="窗口即将关闭">窗口即将关闭</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willClose:)name:NSWindowWillCloseNotificationobject:nil];
+
+-(void)willClose:(NSNotification*)notification{
+
+NSLog(@&quot;窗口关闭&quot;);
+
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MacOS 文件拖入窗口]]></title>
+        <id>https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou</id>
+        <link href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou">
+        </link>
+        <updated>2017-09-20T08:33:28.000Z</updated>
+        <content type="html"><![CDATA[<p>看到很多Mac上的工具类应用都可以直接拖入图片 或者 拖入文件直接使用，今天就来说一下文件拖入的使用方法</p>
+<p>首先 新建一个文件继承NSView；
+声明一个BOOL值</p>
+<pre><code>@property(nonatomic,assign)BOOL isDragIn;
+</code></pre>
+<pre><code>- (void)drawRect:(NSRect)dirtyRect {
+
+       [superdrawRect:dirtyRect];
+
+       [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil]];
+
+       if(_isDragIn) {
+
+       NSLog(@&quot;拖拽了&quot;);
+
+    }
+}
+</code></pre>
+<pre><code>- (NSDragOperation)draggingEntered:(id)sender
+{
+_isDragIn=YES;
+
+[self setNeedsDisplay:YES];
+
+return NSDragOperationCopy;
+
+}
+</code></pre>
+<pre><code>- (void)draggingExited:(id)sender{
+
+_isDragIn=NO;
+
+[self setNeedsDisplay:YES];
+
+}
+</code></pre>
+<pre><code>- (BOOL)prepareForDragOperation:(id)sender{
+
+_isDragIn=NO;
+
+[self setNeedsDisplay:YES];
+
+returnYES;
+
+}
+</code></pre>
+<pre><code>- (BOOL)performDragOperation:(id)sender{
+
+if([senderdraggingSource] !=self)
+
+{
+
+NSArray* filePaths = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+
+NSLog(@&quot;文件地址%@&quot;,filePaths);
+
+}
+
+return YES;
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[MacOS  NSButton 字体颜色]]></title>
         <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se</id>

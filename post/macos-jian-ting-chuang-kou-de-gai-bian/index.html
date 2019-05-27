@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>MacOS  NSButton 字体颜色 | 大方志行</title>
+<title>MacOS  监听窗口的改变 | 大方志行</title>
 <meta name="description" content="见天地，只轻重">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -92,44 +92,67 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">MacOS  NSButton 字体颜色</h2>
-            <div class="post-date">2017-09-20</div>
+            <h2 class="post-title">MacOS  监听窗口的改变</h2>
+            <div class="post-date">2017-10-20</div>
             
-              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/macos-nsbutton-zi-ti-yan-se.jpg')">
+              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/macos-jian-ting-chuang-kou-de-gai-bian.jpg')">
               </div>
             
             <div class="post-content">
-              <p>MacOS  NSButton 字体颜色
-<strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
-<pre><code>NSButton *btn = [[NSButton alloc]init];
+              <p>监听窗口拉伸，进入全屏，即将推出全屏，已经推出全屏，最小化，窗口关闭</p>
+<h2 id="观察窗口拉伸">观察窗口拉伸</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(screenResize)name:NSWindowDidResizeNotificationobject:nil];
+
+-(void)screenResize{
+
+//NSLog(@&quot;观察窗口拉伸&quot;);
+
+//NSLog(@&quot;%.2f===%.2f&quot;,self.view.bounds.size.width,self.view.bounds.size.height);
+
+}
 </code></pre>
-<p><strong>设置button风格为Square</strong></p>
-<pre><code>[btn setBezelStyle:NSBezelStyleRegularSquare];
+<h2 id="即将进入全屏">即将进入全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willEnterFull:)name:NSWindowWillEnterFullScreenNotificationobject:nil];
+
+-(void)willEnterFull:(NSNotification*)notification{
+
+NSLog(@&quot;即将全屏&quot;);
+
+}
 </code></pre>
-<p>**设置字体颜色 **</p>
-<pre><code>[self setButtonColor: btn];
+<h2 id="即将推出全屏">即将推出全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willExitFull:)name:NSWindowWillExitFullScreenNotificationobject:nil];
+
+-(void)willExitFull:(NSNotification*)notification {
+
+NSLog(@&quot;即将推出全屏&quot;);
+
+}
 </code></pre>
-<pre><code>- (void)setButtonColor:(NSButton*)btn{
+<h2 id="已经推出全屏">已经推出全屏</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didExitFull:)name:NSWindowDidExitFullScreenNotificationobject:nil];
 
-NSMutableParagraphStyle*btnStyle = [[NSMutableParagraphStylealloc]init];
+-(void)didExitFull:(NSNotification*)notification{
 
-btnStyle.alignment=NSTextAlignmentCenter;
+NSLog(@&quot;推出全屏&quot;);
 
-NSDictionary *dicAtt =@{NSForegroundColorAttributeName:[NSColor redColor],NSParagraphStyleAttributeName: btnStyle};
+}
+</code></pre>
+<h2 id="窗口最小化">窗口最小化</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didMiniaturize:)name:NSWindowDidMiniaturizeNotificationobject:nil];
 
-//给NSButton先赋值一个字符串，为的是后面替换，如果NSButton的title是空字符串的话，也会内存泄漏
+-(void)didMiniaturize:(NSNotification*)notification{
 
-btn.title=@&quot;清空全部&quot;;//这里的字符串长度要和后面的设置的长度一样 这里可以随便填
+NSLog(@&quot;窗口变小&quot;);
 
-NSMutableAttributedString*attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:btn.attributedTitle];
+}
+</code></pre>
+<h2 id="窗口即将关闭">窗口即将关闭</h2>
+<pre><code>[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willClose:)name:NSWindowWillCloseNotificationobject:nil];
 
-//替换文字
+-(void)willClose:(NSNotification*)notification{
 
-[attTitle replaceCharactersInRange:NSMakeRange(0,4)withString:@&quot;清空全部&quot;];
-
-[attTitle addAttributes:dicAttrange:NSMakeRange(0,4)];
-
-btn.attributedTitle= attTitle;
+NSLog(@&quot;窗口关闭&quot;);
 
 }
 </code></pre>
@@ -147,9 +170,9 @@ btn.attributedTitle= attTitle;
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
+                <a href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou">
                   <h3 class="post-title">
-                    MacOX  关于鼠标的停滞隐藏
+                    MacOS 文件拖入窗口
                   </h3>
                 </a>
               </div>
