@@ -2,14 +2,45 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://gosling-dong.github.io</id>
     <title>大方志行</title>
-    <updated>2019-05-27T08:46:31.180Z</updated>
+    <updated>2019-05-30T07:22:01.388Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://gosling-dong.github.io"/>
     <link rel="self" href="https://gosling-dong.github.io/atom.xml"/>
-    <subtitle>见天地，只轻重</subtitle>
+    <subtitle>见天地，知轻重</subtitle>
     <logo>https://gosling-dong.github.io/images/avatar.png</logo>
     <icon>https://gosling-dong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2019, 大方志行</rights>
+    <entry>
+        <title type="html"><![CDATA[iOS 权限说明]]></title>
+        <id>https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming</id>
+        <link href="https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming">
+        </link>
+        <updated>2019-05-27T08:59:31.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<pre><code>Privacy - Media Library Usage Description               //获取用户媒体库说明
+Privacy - Bluetooth Peripheral Usage Description        //蓝牙外设使用描述
+Privacy - Calendars Usage Description                   //日历的使用说明
+Privacy - Camera Usage Description                      //相机使用叙述说明
+Privacy - Contacts Usage Description                    //联系人使用说明
+Privacy - Health Share Usage Description                //健康分享使用描述
+Privacy - Location Always Usage Description             //后台定位(在iOS设置中为'永久')
+Privacy - Location Usage Description                    //需要定位
+Privacy - Location When In Use Usage Description        //前台定位(在iOS设置中为'使用期间')
+Privacy - Health Update Usage Description               //健康更新使用描述
+Privacy - HomeKit Usage Description                  //HomeKit使用描述
+Privacy - Microphone Usage Description                //麦克风的使用说明
+Privacy - Motion Usage Description                    //运动使用的描述
+Privacy - Photo Library Usage Description              //照片库使用说明
+Privacy - Reminders Usage Description                 //提醒使用描述
+Privacy - TV Provider Usage Description                 //电视提供商使用的描述 (貌似国内用不到)
+
+iOS11新增
+Privacy - NFC Reader Usage Description         //NFC使用描述
+Privacy - Face ID Usage Descriptio                   //使用Face ID 
+Privacy - Photo Library Additions Usage Description     //  保存图片到图库中 （重要）
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[MacOS  监听窗口的改变]]></title>
         <id>https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian</id>
@@ -76,11 +107,53 @@ NSLog(@&quot;窗口关闭&quot;);
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[MacOS  NSButton 字体颜色]]></title>
+        <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se</id>
+        <link href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
+        </link>
+        <updated>2017-09-22T08:03:07.000Z</updated>
+        <content type="html"><![CDATA[<p>MacOS  NSButton 字体颜色
+<strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
+<pre><code>NSButton *btn = [[NSButton alloc]init];
+</code></pre>
+<p><strong>设置button风格为Square</strong></p>
+<pre><code>[btn setBezelStyle:NSBezelStyleRegularSquare];
+</code></pre>
+<p>**设置字体颜色 **</p>
+<pre><code>[self setButtonColor: btn];
+</code></pre>
+<pre><code>- (void)setButtonColor:(NSButton*)btn{
+
+NSMutableParagraphStyle*btnStyle = [[NSMutableParagraphStylealloc]init];
+
+btnStyle.alignment=NSTextAlignmentCenter;
+
+NSDictionary *dicAtt =@{NSForegroundColorAttributeName:[NSColor redColor],NSParagraphStyleAttributeName: btnStyle};
+
+//给NSButton先赋值一个字符串，为的是后面替换，如果NSButton的title是空字符串的话，也会内存泄漏
+
+btn.title=@&quot;清空全部&quot;;//这里的字符串长度要和后面的设置的长度一样 这里可以随便填
+
+NSMutableAttributedString*attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:btn.attributedTitle];
+
+//替换文字
+
+[attTitle replaceCharactersInRange:NSMakeRange(0,4)withString:@&quot;清空全部&quot;];
+
+[attTitle addAttributes:dicAttrange:NSMakeRange(0,4)];
+
+btn.attributedTitle= attTitle;
+
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[MacOS 文件拖入窗口]]></title>
         <id>https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou</id>
         <link href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou">
         </link>
-        <updated>2017-09-20T08:33:28.000Z</updated>
+        <updated>2017-09-21T08:33:28.000Z</updated>
         <content type="html"><![CDATA[<p>看到很多Mac上的工具类应用都可以直接拖入图片 或者 拖入文件直接使用，今天就来说一下文件拖入的使用方法</p>
 <p>首先 新建一个文件继承NSView；
 声明一个BOOL值</p>
@@ -145,56 +218,13 @@ return YES;
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[MacOS  NSButton 字体颜色]]></title>
-        <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se</id>
-        <link href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
-        </link>
-        <updated>2017-09-20T08:03:07.000Z</updated>
-        <content type="html"><![CDATA[<p>MacOS  NSButton 字体颜色
-<strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
-<pre><code>NSButton *btn = [[NSButton alloc]init];
-</code></pre>
-<p><strong>设置button风格为Square</strong></p>
-<pre><code>[btn setBezelStyle:NSBezelStyleRegularSquare];
-</code></pre>
-<p>**设置字体颜色 **</p>
-<pre><code>[self setButtonColor: btn];
-</code></pre>
-<pre><code>- (void)setButtonColor:(NSButton*)btn{
-
-NSMutableParagraphStyle*btnStyle = [[NSMutableParagraphStylealloc]init];
-
-btnStyle.alignment=NSTextAlignmentCenter;
-
-NSDictionary *dicAtt =@{NSForegroundColorAttributeName:[NSColor redColor],NSParagraphStyleAttributeName: btnStyle};
-
-//给NSButton先赋值一个字符串，为的是后面替换，如果NSButton的title是空字符串的话，也会内存泄漏
-
-btn.title=@&quot;清空全部&quot;;//这里的字符串长度要和后面的设置的长度一样 这里可以随便填
-
-NSMutableAttributedString*attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:btn.attributedTitle];
-
-//替换文字
-
-[attTitle replaceCharactersInRange:NSMakeRange(0,4)withString:@&quot;清空全部&quot;];
-
-[attTitle addAttributes:dicAttrange:NSMakeRange(0,4)];
-
-btn.attributedTitle= attTitle;
-
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[MacOX  关于鼠标的停滞隐藏]]></title>
         <id>https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang</id>
         <link href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
         </link>
         <updated>2017-09-20T06:46:40.000Z</updated>
         <content type="html"><![CDATA[<p>MacOX  关于鼠标的停滞隐藏</p>
-<pre><code>首先，mac上的鼠标事件和web一样，有悬停方法等。
-</code></pre>
+<p><strong>首先，mac上的鼠标事件和web一样，有悬停方法等。</strong></p>
 <h1 id="开启鼠标悬停事件">开启鼠标悬停事件</h1>
 <h3 id="先声明">先声明：</h3>
 <pre><code>@property(nonatomic,strong) NSTrackingArea *trackingArea;
