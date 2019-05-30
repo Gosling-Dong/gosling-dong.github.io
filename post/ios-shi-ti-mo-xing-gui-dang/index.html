@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>iOS 实体模型归档 | 大方志行</title>
+<meta name="description" content="见天地，知轻重">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://gosling-dong.github.io/favicon.ico?v=1559209344498">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://gosling-dong.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://gosling-dong.github.io">
+        <img src="https://gosling-dong.github.io/images/avatar.png?v=1559209344498" class="site-logo">
+        <h1 class="site-title">大方志行</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      见天地，知轻重
+    </div>
+    <div class="site-footer">
+       Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://gosling-dong.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">iOS 实体模型归档</h2>
+            <div class="post-date">2019-05-30</div>
+            
+              <div class="feature-container" style="background-image: url('https://gosling-dong.github.io/post-images/ios-shi-ti-mo-xing-gui-dang.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <h5 id="1归档是指用某种格式来保存一个或多个对象以便以后还原这些对象的过程-归档是将数据持久化的一种方式所谓数据持久化就是指在ios开发过程中将数据保存到本地能够让程序的运行更加流畅">1.归档是指用某种格式来保存一个或多个对象，以便以后还原这些对象的过程。归档是将数据持久化的一种方式（所谓数据持久化，就是指在IOS开发过程中，将数据保存到本地，能够让程序的运行更加流畅）。</h5>
+<h1 id=""></h1>
+<h5 id="2想要归档的数据对象需要遵守nscoding协议并且该对象对应的类必须提供encodewithcoder和initwithcoder方法">2.想要归档的数据对象，需要遵守NSCoding协议，并且该对象对应的类必须提供encodeWithCoder:和initWithCoder:方法。</h5>
+<h1 id="-2"></h1>
+<h5 id="3归档就是将临时数据保存成本地文件">3.归档就是将临时数据保存成本地文件。</h5>
+<h1 id="-3"></h1>
+<h5 id="4归档的缺点归档的形式来保存数据只能一次性归档保存以及一次性解压-所以只能针对小量数据而且对数据操作比较笨拙即如果想改动数据的某一小部分还是需要解压整个数据或者归档整个数据">4.归档的缺点：归档的形式来保存数据，只能一次性归档保存以及一次性解压。所以只能针对小量数据，而且对数据操作比较笨拙，即如果想改动数据的某一小部分，还是需要解压整个数据或者归档整个数据。</h5>
+<h1 id="-4"></h1>
+<h2 id="小型数据建议用于用户信息">小型数据：建议用于用户信息</h2>
+<p><strong>UserModel.h 文件</strong></p>
+<pre><code>#import &lt;Foundation/Foundation.h&gt;
+
+@interface UserModel : NSObject&lt;NSCoding&gt;
+
+@property (nonatomic , copy) NSString       *loginname;
+@property (nonatomic , copy) NSString       *password;
+
+@end
+
+
+
+@interface ArchiveModel : NSObject
+
+//  归档
++ (void)archiveTheModel(UserModel *)per;
+//  解档
++ (UserModel *)loadArchiveTheModel ;
+//  移除
++ (BOOL)removeDocumentWithFilePath;
+
+@end
+</code></pre>
+<p><strong>UserModel.m 文件</strong></p>
+<pre><code>#import &quot;UserModel.h&quot;
+#import &lt;objc/runtime.h&gt;
+
+
+@implementation UserModel
+
+/**
+ *  归档
+ *
+ *
+ */
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    unsigned int count;
+    
+    // 获得指向当前类的所有属性的指针
+    objc_property_t *properties = class_copyPropertyList([self class], &amp;count);
+    
+    for (int i = 0; i &lt; count; i++) {
+        // 获取指向当前类的一个属性的指针
+        objc_property_t property = properties[i];
+        // 获取C字符串属性名
+        const char *name = property_getName(property);
+        // C字符串转OC字符串
+        NSString *propertyName = [NSString stringWithUTF8String:name];
+        // 通过关键词取值
+        NSString *propertyValue = [self valueForKeyPath:propertyName];
+        // 编码属性
+        [aCoder encodeObject:propertyValue forKey:propertyName];
+    }
+    free(properties);
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super init])
+    {
+        unsigned int count;
+        // 获得指向当前类的所有属性的指针
+        objc_property_t *properties = class_copyPropertyList([self class], &amp;count);
+        for (int i = 0; i &lt; count; i++) {
+            // 获取指向当前类的一个属性的指针
+            objc_property_t property = properties[i];
+            // 获取C字符串的属性名
+            const char *name = property_getName(property);
+            // C字符串转OC字符串
+            NSString *propertyName = [NSString stringWithUTF8String:name];
+            // 解码属性值
+            NSString *propertyValue = [aDecoder decodeObjectForKey:propertyName];
+            [self setValue:propertyValue forKey:propertyName];
+        }
+        // 记得释放
+        free(properties);
+    }
+    return self;
+}
+
+
+
+@end
+
+
+
+
+
+@implementation ArchiveModel
+
++ (void)archiveTheModel(UserModel *)per{
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@&quot;userInfo&quot;];
+    [NSKeyedArchiver archiveRootObject:per toFile:filePath];
+    NSLog(@&quot;归档:%@&quot;, filePath);
+}
+
+
++ (UserModel *)loadArchiveTheModel {
+    // 解档
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@&quot;userInfo&quot;];
+    IsLoginUser *model = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+    return model;
+}
+
+
+
++ (BOOL)removeDocumentWithFilePath{
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@&quot;userInfo&quot;];
+    BOOL isRemove = true;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([[NSFileManager defaultManager]fileExistsAtPath:filePath]) {
+        isRemove = [fileManager removeItemAtPath:filePath error:nil];
+    }
+    return isRemove;
+}
+
+
+@end
+
+
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://gosling-dong.github.io/tag/pzPh_58bo" class="tag">
+                    Object-C
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming">
+                  <h3 class="post-title">
+                    iOS 权限说明
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
