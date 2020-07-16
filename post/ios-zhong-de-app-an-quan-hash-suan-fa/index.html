@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>iOS中的App安全-HASH算法 | 大方志行</title>
+<meta name="description" content="见天地，知轻重">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://gosling-dong.github.io/favicon.ico?v=1594865904674">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://gosling-dong.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://gosling-dong.github.io">
+        <img src="https://gosling-dong.github.io/images/avatar.png?v=1594865904674" class="site-logo">
+        <h1 class="site-title">大方志行</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/Users/Lorain/Documents/Gridea/output/resume/index.html" class="site-nav">
+            简历
+          </a>
+        
+      
+        
+          <a href="/Users/Lorain/Documents/Gridea/output/lhwork/index.html	" class="site-nav">
+            柳慧-作品
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      见天地，知轻重
+    </div>
+    <div class="site-footer">
+       Powered by <a href="https://gosling-dong.github.io" target="_blank">Dong</a> | <a class="rss" href="https://gosling-dong.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">iOS中的App安全-HASH算法</h2>
+            <div class="post-date">2020-04-18</div>
+            
+              <div class="feature-container" style="background-image: url('https://www.jianshu.com/p/c5f404ce7ba9')">
+              </div>
+            
+            <div class="post-content">
+              <p>Hash，一般翻译做”散列“，也有直接音译为”哈希“的，就是把任意长度的输入通过散列算法变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值得空间通常远小于输入的空间，不同输入可能会散列成相同的输出，所以不可能从散列值来确定唯一的输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。</p>
+<p>Hash的特点<br>
+1.算法是公开<br>
+2.对相同数据运算，得到的结果是一样的<br>
+3.对不同数据运算，如MD5得到的结果默认是128位，32个字符（16进制标识）<br>
+4.没法逆运算<br>
+5.信息摘要，信息”指纹“，是用来做数据识别的</p>
+<p>Hash的使用场景1 - 登录密码加密<br>
+我们在开发的过程中首次登录需要向服务器发送用户密码进行账户验证。但是用户的密码是非常隐私的信息，所以一定要使用加密保护。</p>
+<p>1.直接使用Hash<br>
+那么目前最优的解决方案就是使用密码的Hash值进行验证。</p>
+<p>客户端<br>
+直接将用户输入的密码进行Hash运算，得到结果发送给服务器验证。因为Hash算法无法逆运算，所以就算Hash值泄漏，用户真实密码也不会泄漏。</p>
+<p>服务端<br>
+需要服务器配合，在用户注册的时候，服务端的数据库中保存的就是用户密码的Hash值，而不是密码本身（根据Hash的特点，对相同的数据加密结果是一样的）。这样计算服务器被攻克，用户的隐私信息也能起到一定的保护作用。</p>
+<p>这也是现在各类产品只提供重置密码功能，而不再提供找回密码的功能了。因为服务端本身也不知道用户的真实密码。</p>
+<p>特别说明：用户的密码属于非常隐私的信息。因为大多数用户有一个特点，密码喜欢使用重复的。如果你的APP泄露了用户的密码，那么很有可能，黑客利用用户的手机号码加上密码，可以套出用户的支付信息。这种后果是非常严重的。</p>
+<p>2.再加一点点东西<br>
+上面所说的案例理论上已经非常“安全”了，因为就算黑客知道了你的Hash值，也没法逆运算出用户的密码。但情况并不乐观，下面我们就来看看。</p>
+<p>以MD5为例：在终端上演示一下（比如我的密码是123456）</p>
+<p>$md5 -s &quot;123456&quot;<br>
+MD5的结果是：e10adc3949ba59abbe56e057f20f883e<br>
+接下来隆重介绍一个网站http://www.cmd5.com/<br>
+我们只需要将Hash值进行反向的查询。</p>
+<p>image.png<br>
+那么问题来了，Hash既然不能反算为何这个网站能够查询出来？仔细看下网站的介绍会发现：其实它是一个巨大的数据库，利用明文和Hash的数据记录，进行反向查询。</p>
+<p>当然，提供哈希反向查询服务的不仅仅只有这个网站，还有很多盈利性的公司提供有偿服务。所以如果我们单纯的直接使用Hash算法，用户的密码安全性会非常低。</p>
+<p>于是出现了早期的解决方案加盐</p>
+<p>//用户密码<br>
+NSString * pwd = @&quot;123456&quot;;<br>
+//足够复杂 足够长!!<br>
+static NSString * salt = @&quot;)@#(*URJ(@FJ_(@JF_(IJEFIOJ_@(IJWD{OIJW_(DIJ!W&quot;;<br>
+//先将明文拼接一个盐<br>
+pwd = [pwd stringByAppendingString:salt];<br>
+//再进行Hash算法<br>
+const char *str = pwd.UTF8String;<br>
+uint8_t buffer[CC_MD5_DIGEST_LENGTH];<br>
+CC_MD5(str, (CC_LONG)strlen(str), buffer);<br>
+NSMutableString *md5Str = [NSMutableString string];<br>
+for (int i = 0; i &lt; CC_MD5_DIGEST_LENGTH; i++) {<br>
+[md5Str appendFormat:@&quot;%02x&quot;, buffer[i]];<br>
+}<br>
+这种方式，对于反向查询来说就比较困难了，安全系数也相对较高。</p>
+<p>3.HMAC（Hash-based Message Authentication Code）<br>
+对于简单的使用盐的方式还是会有安全隐患，因为如果盐被泄漏了。那么整个项目将陷入被动。因为这种方式将盐写死在程序里面了，要想今后换掉是比较麻烦的。</p>
+<p>接下来介绍一种加密方案HMAC。它使用一个密钥，并且做了两次散列。</p>
+<p>注意的是：在开发过程中，这个密钥KEY是从服务器获取的，并且一个用户对应一个KEY。</p>
+<p>上代码</p>
+<p>//用户密码<br>
+NSStirng * pwd = @&quot;123456&quot;;<br>
+//加密用的KEY,注意是从服务器获取的<br>
+NSString * key = @&quot;hmackey&quot;;<br>
+//转成C串<br>
+const char *keyData = key.UTF8String;<br>
+const char *strData = pwd.UTF8String;<br>
+uint8_t buffer[CC_MD5_DIGEST_LENGTH];<br>
+//hmac加密<br>
+CCHmac(kCCHmacAlgSHA1, keyData, strlen(keyData), strData, strlen(strData), buffer);<br>
+NSMutableString *hmacStr = [NSMutableString string];<br>
+for (int i = 0; i &lt; CC_MD5_DIGEST_LENGTH; i++) {<br>
+[hmacStr appendFormat:@&quot;%02x&quot;, buffer[i]];<br>
+}<br>
+对于这种加密方案，就可以很好的保护用户的隐私信息。因为就算泄露了KEY。这个KEY也只是一个用户的，不会污染整个项目。</p>
+<p>所谓安全，无法做到绝对安全。他们灰产有句话：只要钱到位，没有什么不可能。我们要做到的就是相对安全。让破解的成本大于破解的利润。</p>
+<p>4.加时间戳<br>
+刚才我们一直停留在黑客想要拿到用户的真实密码，那么如果黑客换了一个思路，只是想要拿到用户的登录权限呢？</p>
+<p>那么我们这种加密，无论怎么加，都是给服务器一个Hash串进行验证，也就是黑客只要拿到你的Hash值，就可以模拟你的客户端进行登录。</p>
+<p>这时候我们可以这样做。</p>
+<p>注册的过程<br>
+还是一样，服务器保存的还是一串HMAC加密之后的HASH值，进行校验。但是登录时的验证做点修改。</p>
+<p>客户端<br>
+1.通过服务器的KEY进行HMAC加密，得到HMAC的Hash串<br>
+2.将得到的Hash串拼接一个时间字符串，如@&quot;201807102248&quot;，一般到分<br>
+3.然后将这个拼接完成的串，再次Hash，将这个结果发给服务器验证。</p>
+<p>服务端<br>
+服务器保存了HMAC的Hash串，以同样的算法，拼接服务器的时间，进行运算，然后校验。比如时间是59秒发送的请求，服务器收到请求时正好跳过一个分钟，过程如下：</p>
+<p>1.(服务器的Hash串+@&quot;201807102249&quot;)Hash，这次不通过，再来一次。<br>
+2.(服务器的Hash串+@&quot;201807102248&quot;)Hash，和上一分钟对比，一次通过算成功。</p>
+<p>这样的好处是，可以做到每登录一次发给服务器的Hash值都是不一样的，黑客不能通过保存Hash值模拟登录。</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://gosling-dong.github.io/post/hwpanmodal-user/">
+                  <h3 class="post-title">
+                    HWPanModal的使用
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://gosling-dong.github.io</id>
     <title>大方志行</title>
-    <updated>2020-03-29T13:12:38.909Z</updated>
+    <updated>2020-07-16T02:18:42.065Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://gosling-dong.github.io"/>
     <link rel="self" href="https://gosling-dong.github.io/atom.xml"/>
@@ -11,9 +11,565 @@
     <icon>https://gosling-dong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 大方志行</rights>
     <entry>
+        <title type="html"><![CDATA[郑好办Js-Api方法 - 2.0]]></title>
+        <id>https://gosling-dong.github.io/post/zheng-hao-ban-js-api-fang-fa-20/</id>
+        <link href="https://gosling-dong.github.io/post/zheng-hao-ban-js-api-fang-fa-20/">
+        </link>
+        <updated>2020-07-16T02:16:44.000Z</updated>
+        <content type="html"><![CDATA[<p>#接入支付宝小程序</p>
+<p>##引入</p>
+<pre><code>&lt;meta charset=&quot;UTF-8&quot; name=&quot;apple-itunes-app&quot;content=&quot;app-id=1502268233, affiliate-data=myAffiliateData,app-argument=izziphoneapp://&quot;&gt;
+&lt;script src=&quot;https://xcx-izz.zhengzhou.gov.cn/jmopen/jssdk/alipayjs/indexnew.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://xcx-izz.zhengzhou.gov.cn/jmopen/jssdk/md5.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://xcx-izz.zhengzhou.gov.cn/jmopen/jssdk/alipayjs/xcxindex.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>##用户信息：</p>
+<pre><code>lightAppJssdk.user.getAppUserInfo ({
+		success: function(data) {
+		},
+		error: function(e) {
+		}
+	})
+</code></pre>
+<p>##请求：</p>
+<blockquote>
+<p>如果请求地址是xcx-izz.zhengzhou.gov.cn或app-izz.zhengzhou.gov.cn   请用:</p>
+</blockquote>
+<pre><code>lightAppJssdk.request.request.getAppRequest({
+		url: 'xxx',
+		data: {
+		xxx:xxx	
+		},
+		header: '',
+		type: 'post', //HTTP请求类型
+		async: false, //同步
+		timeout: 10000, //超时时间设置为10秒；
+		success: function(data) {
+			option.success(JSON.stringify(data));
+		},
+		error: function(e) {
+	
+		}
+	});
+</code></pre>
+<blockquote>
+<p>普通请求请用:</p>
+</blockquote>
+<pre><code>lightAppJssdk.request.request({
+		url: 'xxx',
+		data: {
+		xxx:xxx	
+		},
+		header: '',
+		type: 'post', //HTTP请求类型
+		async: false, //同步
+		timeout: 10000, //超时时间设置为10秒；
+		success: function(data) {
+			option.success(JSON.stringify(data));
+		},
+		error: function(e) {
+	
+		}
+	});
+</code></pre>
+<hr>
+<hr>
+<hr>
+<p>#接入App</p>
+<p>##初始化</p>
+<blockquote>
+<p>当window.onload 后，容器会初始化，产生全局变量 AlipayJSBridge， 然后触发 JS Bridge<br>
+初始化完毕（AlipayJSBridgeReady）事件。 AlipayJSBridge 注入是一个异步过程，因此尽可能监听该事件后，再调用<br>
+AlipayJSBridgeReady 接口。</p>
+<ul>
+<li>function ready(callback) {<br>
+// 如果 jsbridge 已经注入则直接调用<br>
+if (window.AlipayJSBridge) {<br>
+callback &amp;&amp; callback();<br>
+} else {<br>
+// 如果没有注入则监听注入的事件<br>
+document.addEventListener('AlipayJSBridgeReady', callback, false);<br>
+}<br>
+}</li>
+</ul>
+</blockquote>
+<h4 id="示例">示例：</h4>
+<pre><code>&lt;script&gt;
+    function ready(callback) {
+        if (window.AlipayJSBridge) {
+            callback &amp;&amp; callback();
+        } else {
+            document.addEventListener('AlipayJSBridgeReady', callback, false);
+        }
+    }
+    ready(function () {
+        alert('bridge ready');
+    });
+&lt;/script&gt;
+</code></pre>
+<p>##App-用户相关组件</p>
+<p>###唤起APP登录</p>
+<h4 id="示例-2">示例：</h4>
+<pre><code>&lt;script&gt;
+    AlipayJSBridge.call('login',
+    
+    function (result) {
+    
+    });
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p>如果App已登录过，返回json对象。 如果App未登录，则打开app的登录界面，登录成功之后返回json对象。</p>
+</blockquote>
+<pre><code>返回的json对象为
+{
+&quot;result&quot;:true   （判断的时候 true和'true'都判断一下）
+}
+如果取消登录或者登录失败等情况，则返回的json对象为
+{
+&quot;result&quot;: false  （判断的时候 false  和'false'都判断一下）
+}
+</code></pre>
+<p>###获取用户信息</p>
+<h4 id="示例-3">示例：</h4>
+<pre><code>&lt;script&gt;
+    AlipayJSBridge.call('getAppUserInfo',
+    
+        function (result) {
+    
+    });
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p>返回个人信息：</p>
+</blockquote>
+<pre><code>{
+	'success':'ture',
+	'message':'成功'
+	'userInfo':{
+		'username':'用户名'
+		'userId':'用户Id'
+		'idCode':'身份证号'
+		'realName':'用户的真实姓名'
+		'phone':'手机号'
+		'authLevel':'认证等级:0未认证,1身份证认证,2人脸认证+身份证'
+		'nation':'民族'
+		'birth':'生日'
+		'addresses':'身份证住址'
+		'realNameFlag':'是否实名'
+		'enableRealName':'能否实名'
+  		'usertype':'1个人、2法人'
+  		'gender':'性别:0男，1女'
+		'accessToken': '授权用户的accessToken '	
+	}
+}
+</code></pre>
+<blockquote>
+<p>返回法人信息：</p>
+</blockquote>
+<pre><code>{
+	'success':'ture',
+	'message':'成功'
+	'userInfo':{
+		'username':'登录名'
+		'userId':'用户Id'
+		'legalIdCode ':'法定代表人身份证号'
+		'phone':'手机号',
+		'displayName': '显示名称'
+		'authLevel':'认证等级:0未认证,1身份证认证,2人脸认证+身份证'
+		'companyName:'公司名称'
+  		'usertype':'1个人、2法人'
+		'legalRepresentative ':'法定代表人姓名'
+		'legalGender':'法人性别:0男，1女'
+		'accessToken': '授权用户的accessToken '	
+	}
+}
+</code></pre>
+<p>##App-功能相关组件</p>
+<p>###App-定位</p>
+<h4 id="示例-4">示例：</h4>
+<pre><code>&lt;script&gt;
+    AlipayJSBridge.call('location',
+    
+        function (result) {
+    
+    });
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p>返回经纬度：</p>
+</blockquote>
+<pre><code>{
+    'latitude':'纬度',
+    'longitude':'经度'
+}
+</code></pre>
+<p>###App-请求</p>
+<h4 id="示例-5">示例：</h4>
+<pre><code>&lt;script&gt;
+    AlipayJSBridge.call('getAppRequest', {
+    	url: 'url地址',
+    	type: 'GET', // GET/POST 
+    	headers:{
+             key: 'value' 
+    	params:{
+           key: 'value' //	入参
+        }
+    }
+    function (result) {
+ 
+    });
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p>返回请求数据</p>
+</blockquote>
+<pre><code>{       
+   请求返回的信息
+}
+</code></pre>
+<p>###App-获取App站点信息</p>
+<h4 id="示例-6">示例：</h4>
+<pre><code>&lt;script&gt;  
+    AlipayJSBridge.call('areaCode',
+
+    function (result) {
+    
+    }); 
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+'areaCode': '410100000000',
+'areaName': '郑州市',
+'siteid': '1',
+}
+</code></pre>
+<p>###App-打开办事指南</p>
+<h4 id="示例-7">示例：</h4>
+<pre><code>AlipayJSBridge.call('pushMatterDetail',
+{
+'serviceUnid': 'string',
+'serviceCode': 'string',
+}
+function (result) {
+
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result': '成功'
+}
+</code></pre>
+<p>###App-智能语音</p>
+<h4 id="示例-8">示例：</h4>
+<blockquote>
+<p>开启语音识别</p>
+</blockquote>
+<pre><code>AlipayJSBridge.call('intelligentVoice', {
+    ‘type’:’T’ 
+    },
+function (result) { 
+    
+}); 
+</code></pre>
+<blockquote>
+<p>返回信息：</p>
+</blockquote>
+<pre><code>1）.
+{
+&quot;code&quot;:&quot;0&quot;,
+&quot;result&quot;:&quot;开启成功&quot;
+}
+2）.
+{
+&quot;code&quot;:&quot;1&quot;,
+&quot;result&quot;:&quot;网络异常&quot;
+}
+</code></pre>
+<blockquote>
+<p>关闭语音识别</p>
+</blockquote>
+<pre><code>AlipayJSBridge.call('intelligentVoice', {
+    ‘type’:’F’ 
+    },
+function (result) { 
+
+}); 
+</code></pre>
+<blockquote>
+<p>返回信息：</p>
+</blockquote>
+<pre><code>{
+    &quot;code&quot;:&quot;0&quot;,
+    &quot;result&quot;:&quot;语音识别内容&quot;
+}
+</code></pre>
+<p>###App-打开实名认证页面</p>
+<h4 id="示例-9">示例：</h4>
+<pre><code>AlipayJSBridge.call('getonverified',{
+    }
+    function (result) {
+
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result': 'false '
+    'message':'回调信息’
+    'authLevel':'用户认证等级'
+}
+</code></pre>
+<p>###App-人脸识别(<em>弃用</em>)</p>
+<h4 id="示例-10">示例：</h4>
+<pre><code>AlipayJSBridge.call('rpCertification',{
+    }
+    function (result) {
+    
+    });
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result': {}
+    'code':'0’
+}
+</code></pre>
+<p>###App-人脸识别</p>
+<h4 id="示例-11">示例：</h4>
+<pre><code>AlipayJSBridge.call('rpFaceCertification',{
+    'type':'',
+    'appid':''
+    }
+    function (result) {
+    
+    });
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result': {}
+    'code':'0’
+}
+</code></pre>
+<p>###App-设备密码检验</p>
+<h4 id="示例-12">示例：</h4>
+<pre><code>AlipayJSBridge.call('devicelock',{
+    }
+	function (result) {
+		
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result': '认证成功'
+    'code':'1000',
+}
+</code></pre>
+<p>###App-通知用户信息修改</p>
+<h4 id="示例-13">示例：</h4>
+<pre><code>AlipayJSBridge.call('usersmodify',{
+    }
+	function (result) {
+		
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'message':'收到通知'
+}
+</code></pre>
+<p>###App-绿城一卡通</p>
+<h4 id="示例-14">示例：</h4>
+<pre><code>AlipayJSBridge.call('yearAudit',{
+    }
+	function (result) {
+		
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'result':'false'，
+    'message':'message'
+}
+</code></pre>
+<p>###App-地图信息展示（集散点、导航）</p>
+<h4 id="示例-15">示例：</h4>
+<pre><code>var data = {
+            &quot;result&quot;: [
+						{
+							&quot;inoculationUnitName&quot;:&quot;位置名称（如:北京SKP）&quot;,
+							&quot;phone&quot;: &quot;电话号码如:010-65305888&quot;,
+							&quot;inoculationUnitAddress&quot;:&quot;详细地理位置（如:北京市朝阳区建国路87号）&quot;,
+							&quot;latitude&quot;: &quot;40.22077(纬度)&quot;,
+							&quot;longitude&quot;: &quot;116.23128(经度)&quot;
+						},
+						{
+							&quot;inoculationUnitName&quot;: &quot;郑州市南关社区卫生服务中心&quot;,
+							&quot;phone&quot;: &quot;61280378&quot;,
+							&quot;inoculationUnitAddress&quot;: &quot;郑州市管城回族区陇海路72号&quot;,
+							&quot;latitude&quot;: &quot;34.740139&quot;,
+							&quot;longitude&quot;: &quot;113.679328&quot;
+						}]
+                    }
+
+AlipayJSBridge.call('showmapinfo',{
+        'title':'标题（如：疫情网点信息）',
+		'info':data
+    }
+	function (result) {
+		
+});
+</code></pre>
+<blockquote>
+<p>返回JSON对象</p>
+</blockquote>
+<pre><code>{
+    'code':'1'，
+    'result':'info为空'
+}
+</code></pre>
+<p>###App-到办事主页或资讯主页</p>
+<h4 id="示例-16">示例：</h4>
+<pre><code>AlipayJSBridge.call('integraljump',{
+      	'type':'news'//work
+	},
+	function (result) {
+			
+});
+</code></pre>
+<h2 id="注意事项-同时接入小程序和app-区分方法">注意事项 同时接入小程序和App 区分方法</h2>
+<blockquote>
+<ul>
+<li>通过UserAgent的方式去分区分小程序和App</li>
+<li>izzzwfwapp 为郑好办App的UA</li>
+<li>alipayclient 为支付宝的UA</li>
+</ul>
+</blockquote>
+<h4 id="使用">使用</h4>
+<blockquote>
+<p>判断浏览器内核、手机系统等，</p>
+</blockquote>
+<pre><code>    function containerType() {
+		var sUserAgent = navigator.userAgent.toLowerCase();
+		var bIsApp = sUserAgent.indexOf('izzzwfwapp') &gt; -1;
+		var bIsAlipay = sUserAgent.indexOf('alipayclient') &gt; -1;
+		if(bIsApp) {
+			return 'app';		//App
+		}else if(bIsAlipay){
+			return 'xcx';		//小程序
+		}else {
+			return 'other';
+		}
+	}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[iOS中的App安全-HASH算法]]></title>
+        <id>https://gosling-dong.github.io/post/ios-zhong-de-app-an-quan-hash-suan-fa/</id>
+        <link href="https://gosling-dong.github.io/post/ios-zhong-de-app-an-quan-hash-suan-fa/">
+        </link>
+        <updated>2020-04-18T07:19:44.000Z</updated>
+        <content type="html"><![CDATA[<p>Hash，一般翻译做”散列“，也有直接音译为”哈希“的，就是把任意长度的输入通过散列算法变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值得空间通常远小于输入的空间，不同输入可能会散列成相同的输出，所以不可能从散列值来确定唯一的输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。</p>
+<p>Hash的特点<br>
+1.算法是公开<br>
+2.对相同数据运算，得到的结果是一样的<br>
+3.对不同数据运算，如MD5得到的结果默认是128位，32个字符（16进制标识）<br>
+4.没法逆运算<br>
+5.信息摘要，信息”指纹“，是用来做数据识别的</p>
+<p>Hash的使用场景1 - 登录密码加密<br>
+我们在开发的过程中首次登录需要向服务器发送用户密码进行账户验证。但是用户的密码是非常隐私的信息，所以一定要使用加密保护。</p>
+<p>1.直接使用Hash<br>
+那么目前最优的解决方案就是使用密码的Hash值进行验证。</p>
+<p>客户端<br>
+直接将用户输入的密码进行Hash运算，得到结果发送给服务器验证。因为Hash算法无法逆运算，所以就算Hash值泄漏，用户真实密码也不会泄漏。</p>
+<p>服务端<br>
+需要服务器配合，在用户注册的时候，服务端的数据库中保存的就是用户密码的Hash值，而不是密码本身（根据Hash的特点，对相同的数据加密结果是一样的）。这样计算服务器被攻克，用户的隐私信息也能起到一定的保护作用。</p>
+<p>这也是现在各类产品只提供重置密码功能，而不再提供找回密码的功能了。因为服务端本身也不知道用户的真实密码。</p>
+<p>特别说明：用户的密码属于非常隐私的信息。因为大多数用户有一个特点，密码喜欢使用重复的。如果你的APP泄露了用户的密码，那么很有可能，黑客利用用户的手机号码加上密码，可以套出用户的支付信息。这种后果是非常严重的。</p>
+<p>2.再加一点点东西<br>
+上面所说的案例理论上已经非常“安全”了，因为就算黑客知道了你的Hash值，也没法逆运算出用户的密码。但情况并不乐观，下面我们就来看看。</p>
+<p>以MD5为例：在终端上演示一下（比如我的密码是123456）</p>
+<p>$md5 -s &quot;123456&quot;<br>
+MD5的结果是：e10adc3949ba59abbe56e057f20f883e<br>
+接下来隆重介绍一个网站http://www.cmd5.com/<br>
+我们只需要将Hash值进行反向的查询。</p>
+<p>image.png<br>
+那么问题来了，Hash既然不能反算为何这个网站能够查询出来？仔细看下网站的介绍会发现：其实它是一个巨大的数据库，利用明文和Hash的数据记录，进行反向查询。</p>
+<p>当然，提供哈希反向查询服务的不仅仅只有这个网站，还有很多盈利性的公司提供有偿服务。所以如果我们单纯的直接使用Hash算法，用户的密码安全性会非常低。</p>
+<p>于是出现了早期的解决方案加盐</p>
+<p>//用户密码<br>
+NSString * pwd = @&quot;123456&quot;;<br>
+//足够复杂 足够长!!<br>
+static NSString * salt = @&quot;)@#(*URJ(@FJ_(@JF_(IJEFIOJ_@(IJWD{OIJW_(DIJ!W&quot;;<br>
+//先将明文拼接一个盐<br>
+pwd = [pwd stringByAppendingString:salt];<br>
+//再进行Hash算法<br>
+const char *str = pwd.UTF8String;<br>
+uint8_t buffer[CC_MD5_DIGEST_LENGTH];<br>
+CC_MD5(str, (CC_LONG)strlen(str), buffer);<br>
+NSMutableString *md5Str = [NSMutableString string];<br>
+for (int i = 0; i &lt; CC_MD5_DIGEST_LENGTH; i++) {<br>
+[md5Str appendFormat:@&quot;%02x&quot;, buffer[i]];<br>
+}<br>
+这种方式，对于反向查询来说就比较困难了，安全系数也相对较高。</p>
+<p>3.HMAC（Hash-based Message Authentication Code）<br>
+对于简单的使用盐的方式还是会有安全隐患，因为如果盐被泄漏了。那么整个项目将陷入被动。因为这种方式将盐写死在程序里面了，要想今后换掉是比较麻烦的。</p>
+<p>接下来介绍一种加密方案HMAC。它使用一个密钥，并且做了两次散列。</p>
+<p>注意的是：在开发过程中，这个密钥KEY是从服务器获取的，并且一个用户对应一个KEY。</p>
+<p>上代码</p>
+<p>//用户密码<br>
+NSStirng * pwd = @&quot;123456&quot;;<br>
+//加密用的KEY,注意是从服务器获取的<br>
+NSString * key = @&quot;hmackey&quot;;<br>
+//转成C串<br>
+const char *keyData = key.UTF8String;<br>
+const char *strData = pwd.UTF8String;<br>
+uint8_t buffer[CC_MD5_DIGEST_LENGTH];<br>
+//hmac加密<br>
+CCHmac(kCCHmacAlgSHA1, keyData, strlen(keyData), strData, strlen(strData), buffer);<br>
+NSMutableString *hmacStr = [NSMutableString string];<br>
+for (int i = 0; i &lt; CC_MD5_DIGEST_LENGTH; i++) {<br>
+[hmacStr appendFormat:@&quot;%02x&quot;, buffer[i]];<br>
+}<br>
+对于这种加密方案，就可以很好的保护用户的隐私信息。因为就算泄露了KEY。这个KEY也只是一个用户的，不会污染整个项目。</p>
+<p>所谓安全，无法做到绝对安全。他们灰产有句话：只要钱到位，没有什么不可能。我们要做到的就是相对安全。让破解的成本大于破解的利润。</p>
+<p>4.加时间戳<br>
+刚才我们一直停留在黑客想要拿到用户的真实密码，那么如果黑客换了一个思路，只是想要拿到用户的登录权限呢？</p>
+<p>那么我们这种加密，无论怎么加，都是给服务器一个Hash串进行验证，也就是黑客只要拿到你的Hash值，就可以模拟你的客户端进行登录。</p>
+<p>这时候我们可以这样做。</p>
+<p>注册的过程<br>
+还是一样，服务器保存的还是一串HMAC加密之后的HASH值，进行校验。但是登录时的验证做点修改。</p>
+<p>客户端<br>
+1.通过服务器的KEY进行HMAC加密，得到HMAC的Hash串<br>
+2.将得到的Hash串拼接一个时间字符串，如@&quot;201807102248&quot;，一般到分<br>
+3.然后将这个拼接完成的串，再次Hash，将这个结果发给服务器验证。</p>
+<p>服务端<br>
+服务器保存了HMAC的Hash串，以同样的算法，拼接服务器的时间，进行运算，然后校验。比如时间是59秒发送的请求，服务器收到请求时正好跳过一个分钟，过程如下：</p>
+<p>1.(服务器的Hash串+@&quot;201807102249&quot;)Hash，这次不通过，再来一次。<br>
+2.(服务器的Hash串+@&quot;201807102248&quot;)Hash，和上一分钟对比，一次通过算成功。</p>
+<p>这样的好处是，可以做到每登录一次发给服务器的Hash值都是不一样的，黑客不能通过保存Hash值模拟登录。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[HWPanModal的使用]]></title>
-        <id>https://gosling-dong.github.io/post/hwpanmodal-user</id>
-        <link href="https://gosling-dong.github.io/post/hwpanmodal-user">
+        <id>https://gosling-dong.github.io/post/hwpanmodal-user/</id>
+        <link href="https://gosling-dong.github.io/post/hwpanmodal-user/">
         </link>
         <updated>2019-07-17T01:34:21.000Z</updated>
         <content type="html"><![CDATA[<h3 id="hwpanmodal-用于从底部弹出控制器并用拖拽手势来关闭控制器支持任何">HWPanModal 用于从底部弹出控制器，并用拖拽手势来关闭控制器支持任何</h3>
@@ -287,8 +843,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[iOS 实体模型归档]]></title>
-        <id>https://gosling-dong.github.io/post/ios-shi-ti-mo-xing-gui-dang</id>
-        <link href="https://gosling-dong.github.io/post/ios-shi-ti-mo-xing-gui-dang">
+        <id>https://gosling-dong.github.io/post/ios-shi-ti-mo-xing-gui-dang/</id>
+        <link href="https://gosling-dong.github.io/post/ios-shi-ti-mo-xing-gui-dang/">
         </link>
         <updated>2019-05-30T08:56:18.000Z</updated>
         <content type="html"><![CDATA[<h5 id="1归档是指用某种格式来保存一个或多个对象以便以后还原这些对象的过程-归档是将数据持久化的一种方式所谓数据持久化就是指在ios开发过程中将数据保存到本地能够让程序的运行更加流畅">1.归档是指用某种格式来保存一个或多个对象，以便以后还原这些对象的过程。归档是将数据持久化的一种方式（所谓数据持久化，就是指在IOS开发过程中，将数据保存到本地，能够让程序的运行更加流畅）。</h5>
@@ -429,8 +985,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[iOS 权限说明]]></title>
-        <id>https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming</id>
-        <link href="https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming">
+        <id>https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming/</id>
+        <link href="https://gosling-dong.github.io/post/ios-quan-xian-shuo-ming/">
         </link>
         <updated>2019-05-27T08:59:31.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
@@ -460,8 +1016,8 @@ Privacy - Photo Library Additions Usage Description     //  保存图片到图�
     </entry>
     <entry>
         <title type="html"><![CDATA[MacOS  监听窗口的改变]]></title>
-        <id>https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian</id>
-        <link href="https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian">
+        <id>https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian/</id>
+        <link href="https://gosling-dong.github.io/post/macos-jian-ting-chuang-kou-de-gai-bian/">
         </link>
         <updated>2017-10-20T08:24:15.000Z</updated>
         <content type="html"><![CDATA[<p>监听窗口拉伸，进入全屏，即将推出全屏，已经推出全屏，最小化，窗口关闭</p>
@@ -525,11 +1081,11 @@ NSLog(@&quot;窗口关闭&quot;);
     </entry>
     <entry>
         <title type="html"><![CDATA[MacOS  NSButton 字体颜色]]></title>
-        <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se</id>
-        <link href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se">
+        <id>https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se/</id>
+        <link href="https://gosling-dong.github.io/post/macos-nsbutton-zi-ti-yan-se/">
         </link>
         <updated>2017-09-22T08:03:07.000Z</updated>
-        <content type="html"><![CDATA[<p>MacOS  NSButton 字体颜色
+        <content type="html"><![CDATA[<p>MacOS  NSButton 字体颜色<br>
 <strong>初始化NSbutton（这里就不做布局设置了）</strong></p>
 <pre><code>NSButton *btn = [[NSButton alloc]init];
 </code></pre>
@@ -567,12 +1123,12 @@ btn.attributedTitle= attTitle;
     </entry>
     <entry>
         <title type="html"><![CDATA[MacOS 文件拖入窗口]]></title>
-        <id>https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou</id>
-        <link href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou">
+        <id>https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou/</id>
+        <link href="https://gosling-dong.github.io/post/macos-wen-jian-tuo-ru-chuang-kou/">
         </link>
         <updated>2017-09-21T08:33:28.000Z</updated>
         <content type="html"><![CDATA[<p>看到很多Mac上的工具类应用都可以直接拖入图片 或者 拖入文件直接使用，今天就来说一下文件拖入的使用方法</p>
-<p>首先 新建一个文件继承NSView；
+<p>首先 新建一个文件继承NSView；<br>
 声明一个BOOL值</p>
 <pre><code>@property(nonatomic,assign)BOOL isDragIn;
 </code></pre>
@@ -636,8 +1192,8 @@ return YES;
     </entry>
     <entry>
         <title type="html"><![CDATA[MacOX  关于鼠标的停滞隐藏]]></title>
-        <id>https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang</id>
-        <link href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang">
+        <id>https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang/</id>
+        <link href="https://gosling-dong.github.io/post/macox-guan-yu-shu-biao-de-ting-zhi-yin-cang/">
         </link>
         <updated>2017-09-20T06:46:40.000Z</updated>
         <content type="html"><![CDATA[<p>MacOX  关于鼠标的停滞隐藏</p>
