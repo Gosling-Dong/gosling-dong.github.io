@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://gosling-dong.github.io</id>
     <title>大方志行</title>
-    <updated>2020-07-16T02:18:42.065Z</updated>
+    <updated>2020-07-16T02:21:12.301Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://gosling-dong.github.io"/>
     <link rel="self" href="https://gosling-dong.github.io/atom.xml"/>
@@ -485,7 +485,8 @@ AlipayJSBridge.call('showmapinfo',{
         <link href="https://gosling-dong.github.io/post/ios-zhong-de-app-an-quan-hash-suan-fa/">
         </link>
         <updated>2020-04-18T07:19:44.000Z</updated>
-        <content type="html"><![CDATA[<p>Hash，一般翻译做”散列“，也有直接音译为”哈希“的，就是把任意长度的输入通过散列算法变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值得空间通常远小于输入的空间，不同输入可能会散列成相同的输出，所以不可能从散列值来确定唯一的输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。</p>
+        <content type="html"><![CDATA[<p><img src="https://gosling-dong.github.io/post-images/1594866021375.jpg" alt="" loading="lazy"><br>
+Hash，一般翻译做”散列“，也有直接音译为”哈希“的，就是把任意长度的输入通过散列算法变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值得空间通常远小于输入的空间，不同输入可能会散列成相同的输出，所以不可能从散列值来确定唯一的输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。</p>
 <p>Hash的特点<br>
 1.算法是公开<br>
 2.对相同数据运算，得到的结果是一样的<br>
